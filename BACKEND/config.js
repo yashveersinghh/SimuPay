@@ -1,3 +1,3 @@
 module.exports ={
-    JWT_SECRET: "starfish"
+    JWT_SECRET: process.env.JWT_SECRET
 }
