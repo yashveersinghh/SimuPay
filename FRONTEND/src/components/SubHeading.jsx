@@ -1,8 +1,8 @@
-import React from 'react'
-
-const SubHeading = () => {
+const SubHeading = ({label}) => {
   return (
-    <div>SubHeading</div>
+    <div className='text-slate-500 text-md pt-1 px-4 pb-4 text-center'>
+        {label}
+    </div>
   )
 }
 
