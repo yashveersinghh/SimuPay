@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 const SendMoney = () => {
@@ -34,7 +35,8 @@ const SendMoney = () => {
 							}
 						})
 						navigate("/successful");
-					}} className="text-white font-medium bg-green-500 border rounded-xl cursor-pointer w-full pt-3 pb-3">Initiate Transfer</button>
+						toast.success("Transfered Successfully");
+					}} className="text-white font-medium bg-green-500 hover:bg-green-400 border rounded-xl cursor-pointer w-full pt-3 pb-3">Initiate Transfer</button>
 				</div>
 			</div>
 		</div>

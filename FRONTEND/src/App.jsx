@@ -8,9 +8,13 @@ import Signin from "./pages/Signin"
 import Dashboard from "./pages/Dashboard"
 import SendMoney from "./pages/SendMoney"
 import Successful from "./pages/Successful"
+import Me from "./pages/Me"
+import { Toaster } from "react-hot-toast";
+
 const App = () => {
   return (
     <BrowserRouter>
+    <Toaster position="top-center" />
       <Routes>
         <Route path='/' element={<Me />} />
         <Route path='/signup' element={<Signup />} />
