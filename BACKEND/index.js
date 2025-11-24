@@ -1,14 +1,36 @@
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
+const mongoose = require('mongoose');
 const mainRouter = require('./routes/index');
+
 const app = express();
-app.use(cors());
+
+const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
+const FRONTEND_URL = process.env.FRONTEND_URL || '';
+
+if (!MONGO_URI) {
+  console.error('MONGO_URI is not set. Exiting.');
+  process.exit(1);
+}
+
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => {
+    console.error('Mongo connection error', err);
+    process.exit(1);
+});
+
+app.use(cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+}));
+
 app.use(express.json());
 
 app.use('/api/v1', mainRouter)
 
-app.listen(3000, ()=>{
-    console.log('http://localhost:3000');
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });

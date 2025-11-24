@@ -14,22 +14,40 @@ const Signup = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSignUp = async ()=>{
-    if(!firstName.trim() || !lastName.trim() || !username.trim() || !password.trim()){
-      toast("Please fill all the fields");
+  const handleSignUp = async () => {
+    if (!firstName.trim() || !lastName.trim() || !username.trim() || !password.trim()) {
+      toast.error("Please fill all the fields");
       return;
     }
-    const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
-      firstName,
-      lastName,
-      username,
-      password,
-    })
-    localStorage.setItem("token", response.data.token);
-    toast.success("Signed up successfully!");
-    navigate("/dashboard")
-  }
+
+    setLoading(true);
+    try {
+      const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+        firstName,
+        lastName,
+        username,
+        password,
+      });
+
+      const data = response.data;
+      if (data && data.token) {
+        localStorage.setItem("token", data.token);
+        toast.success("Signed up successfully!");
+        navigate("/dashboard");
+      } else {
+        toast.error(data?.message || "Signup failed");
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      const serverMsg = err.response?.data?.message;
+      if (serverMsg) toast.error(serverMsg);
+      else toast.error("Network or server error. Check console.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="bg-slate-300 h-screen flex justify-center">
         <div className="flex flex-col justify-center">
@@ -47,9 +65,9 @@ const Signup = () => {
                 }} placeholder="user@gmail.com" label={"Email"} />
                 <InputBox onchange={(e)=>{
                   setPassword(e.target.value);
-                }} placeholder="password" label={"Password"} />
+                }} placeholder="password" type="password" label={"Password"} />
                 <div className="pt-4">
-                    <Button onClick={handleSignUp} label={"Sign up"}/>
+                    <Button onClick={handleSignUp} label={loading ? "Signing..." : "Sign up"} />
                 </div>
                 <ButtonWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"}/>
             </div>
